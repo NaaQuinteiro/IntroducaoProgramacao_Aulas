@@ -19,3 +19,7 @@ print(dicionario.get("numero", "Chave não encontrada!"))
 dicionario["Adiciona chave"] = "Nova chave"
 
 print(dicionario)
+
+# Para retirar determinado conjunto de chave e valor da lsita usamos pop
+dicionario.pop("numro")
+print(dicionario)
