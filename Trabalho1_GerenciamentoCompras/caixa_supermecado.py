@@ -3,6 +3,16 @@ tabela = {"Alface": 5.00,
           "Batata": 4.55,
           "Tomate": 9.80,
           "Feijão": 7.30}
+
+tabela = {
+    "Alface": {"preco": 6.00, "estoque": 10},
+    "Tomate": {"preco": 11.00, "estoque": 8},
+    "Batata": {"preco": 9.00, "estoque": 15},
+    "Chocolate": {"preco": 5.00, "estoque": 20},
+    "Banana": {"preco": 3.50, "estoque": 12}
+}
+
+
 valor_total = 0
 while True:
     produto = input("Qual o produto? ").capitalize()
