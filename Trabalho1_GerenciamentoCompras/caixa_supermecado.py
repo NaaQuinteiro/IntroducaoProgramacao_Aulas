@@ -1,4 +1,5 @@
 #--------------Caixa de supermercado-----------------
+import time 
 product_stock = {
     "Alface": {"preco": 6.00, "quantidade": 10},
     "Tomate": {"preco": 11.00, "quantidade": 8},
@@ -46,7 +47,9 @@ while True:
                 total_purchase_value += product_value
                 continue
             else:
-                print("Sinto muito, quantidade indisponível no estoque, por favor, selecione outro produto ou uma quantidade válida") 
+                print("Sinto muito, quantidade indisponível no estoque, por favor, selecione outro produto ou uma quantidade válida")
+                time.sleep(0.5)
+                print()
         continue
 
     else:
