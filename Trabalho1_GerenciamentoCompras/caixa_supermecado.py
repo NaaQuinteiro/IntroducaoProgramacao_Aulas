@@ -1,5 +1,5 @@
 #--------------Caixa de supermercado-----------------
-estoque_produtos = {
+product_stock = {
     "Alface": {"preco": 6.00, "quantidade": 10},
     "Tomate": {"preco": 11.00, "quantidade": 8},
     "Batata": {"preco": 9.00, "quantidade": 15},
@@ -10,48 +10,47 @@ estoque_produtos = {
 print("-----Bem vindo ao Mercadinho Unasp------")
 print()
 
-valor_totalCompra = 0
+total_purchase_value = 0
 
 while True:
-    pergunta = input("Deseja adicionar um produto ao carrinho? (S/N)\n").upper()
+    question = input("Deseja fazer sua compra? (S/N)\n").upper()
 
-    if pergunta == "S":
+    if question == "S":
         print("-------------Esses são nossos produtos--------------")
-        for produto, dados in estoque_produtos.items():
-            print(f"{produto} | Preço: R${dados['preco']:.2f} | Quantidade disponível: {dados['quantidade']}")
+        for product, data in product_stock.items():
+            print(f"{product} | Preço: R${data['preco']:.2f} | Quantidade disponível: {data['quantidade']}")
             print()
        
-        produto_selecionado = input("Informe o nome do produto: ").capitalize()
-        if estoque_produtos.get(produto_selecionado) is None:
+        selected_product = input("Informe o nome do produto: ").capitalize()
+        if product_stock.get(selected_product) is None:
             add_product = input("O produto selecionado não foi encontrado no estoque\nDeseja adicioná-lo? (S/N)").upper()
             
             if add_product == "S":
-                product_name = input("Insira o nome do produto: ").capitalize()
-                product_price = float(input("Insira o preço: "))
-                quantity = int(input("Insira a quantidade do estoque: "))
+                new_product_name = input("Insira o nome do produto: ").capitalize()
+                new_product_price = float(input("Insira o preço: "))
+                new_product_quantity = int(input("Insira a quantidade do estoque: "))
 
-                estoque_produtos[product_name] = {
-                    "preco": product_price,
-                    "quantidade": quantity
+                product_stock[new_product_name] = {
+                    "preco": new_product_price,
+                    "quantidade": new_product_quantity
                 }
                 continue   
         else:
-            quantidade_produto = float(input("Qual é a quantidade? "))
+            product_quantity = float(input("Qual é a quantidade? "))
 
-            if estoque_produtos[produto_selecionado]["quantidade"] >= quantidade_produto:
+            if product_stock[selected_product]["quantidade"] >= product_quantity:
+                product_stock[selected_product]["quantidade"] -= product_quantity
 
-                estoque_produtos[produto_selecionado]["quantidade"] -= quantidade_produto
+                product_value = product_stock[selected_product]["preco"] * product_quantity
 
-                valor_produto = estoque_produtos[produto_selecionado]["preco"] * quantidade_produto
-
-                valor_totalCompra += valor_produto
+                total_purchase_value += product_value
                 continue
-            print("Sinto muito, quantidade indisponível no estoque")
+            else:
+                print("Sinto muito, quantidade indisponível no estoque, por favor, selecione outro produto ou uma quantidade válida") 
         continue
 
     else:
         print("-----------------Obrigada pela sua compra-----------------")
-        print("Valor total da sua compra:", valor_totalCompra)
+        print("Valor total da sua compra:", total_purchase_value)
         print("--------------------Volte sempre!---------------------\n")
         break
-
