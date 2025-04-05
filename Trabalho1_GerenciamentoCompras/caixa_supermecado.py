@@ -23,18 +23,35 @@ while True:
        
         produto_selecionado = input("Informe o nome do produto: ").capitalize()
         if estoque_produtos.get(produto_selecionado) is None:
-            print("Produto não encontrado")
+            add_product = input("O produto selecionado não foi encontrado no estoque\nDeseja adicioná-lo? (S/N)").upper()
+            
+            if add_product == "S":
+                product_name = input("Insira o nome do produto: ").capitalize()
+                product_price = float(input("Insira o preço: "))
+                quantity = int(input("Insira a quantidade do estoque: "))
+
+                estoque_produtos[product_name] = {
+                    "preco": product_price,
+                    "quantidade": quantity
+                }
+                continue   
         else:
             quantidade_produto = float(input("Qual é a quantidade? "))
 
-            valor_produto = estoque_produtos[produto_selecionado] * quantidade_produto
+            if estoque_produtos[produto_selecionado]["quantidade"] >= quantidade_produto:
 
-            valor_totalCompra += valor_produto
-            continue
+                estoque_produtos[produto_selecionado]["quantidade"] -= quantidade_produto
+
+                valor_produto = estoque_produtos[produto_selecionado]["preco"] * quantidade_produto
+
+                valor_totalCompra += valor_produto
+                continue
+            print("Sinto muito, quantidade indisponível no estoque")
+        continue
 
     else:
-        print()
+        print("-----------------Obrigada pela sua compra-----------------")
         print("Valor total da sua compra:", valor_totalCompra)
-        print("-----------------Obrigada pela sua compra-----------------\n-----------------Volte sempre!-----------------")
+        print("--------------------Volte sempre!---------------------\n")
         break
 
