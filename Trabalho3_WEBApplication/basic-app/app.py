@@ -93,42 +93,49 @@ def server(input, output, session):
     @render.text
     def total_value():
         return f"Total da compra: R${total_value_calc():.2f}"
+    
+
+    previous_click = {"value": 0}  # Estado simples para armazenar o valor anterior
 
     @reactive.effect
     def finalize():
-        # if input.finalize_purchase() > 0:
-        #     total = total_value_calc()
-        #     for prod, data in product_stock.items():
-        #         quantity = input[f"quant_{prod}"]()
-        #         if quantity > 0:
-        #             data["quantidade"] -= quantity
-        #             session.send_input_message(f"quant_{prod}", {"value": 0})
-        #     ui.notification_show(f"Compra finalizada. Total: R${total:.2f}", duration=5)
-        # Verifica se o usuário clicou no botão para finalizar a compra
-        if input.finalize_purchase() > 0:
+        current_click = input.finalize_purchase()
+        
+        # Verifica se o botão foi clicado novamente (impede reexecução após reset dos inputs)
+        if current_click > previous_click["value"]:
+            previous_click["value"] = current_click  # Atualiza o clique anterior
             total = total_value_calc()  # Calcula o total da compra
-            # Cria um dicionário para armazenar as quantidades escolhidas
-            quantities_to_update = {}
+            quantities_to_update = {}  # Dicionário para armazenar os produtos válidos
 
             # Verifica se as quantidades solicitadas são válidas
             for prod, data in product_stock.items():
-                quantity = input[f"quant_{prod}"]()  # Quantidade escolhida
+                quantity = input[f"quant_{prod}"]()
                 if quantity > data["quantidade"]:
-                    ui.notification_show(f"Sinto muito, quantidade de {prod} indisponível.", duration=5)
-                    return  # Se houver produto com quantidade insuficiente, retorna sem fazer nada
+                    # Mostra erro se a quantidade for maior que o estoque disponível
+                    ui.notification_show(f"Sinto muito, quantidade de {prod} indisponível.", duration=3)
+                    
+                    # Reseta os inputs para os produtos válidos já selecionados
+                    for prod in quantities_to_update.keys():
+                        session.send_input_message(f"quant_{prod}", {"value": 0})
+                    return  # Interrompe a execução
+
                 if quantity > 0:
-                    quantities_to_update[prod] = quantity  # Guarda as quantidades válidas
+                    quantities_to_update[prod] = quantity  # Armazena produto e quantidade válidos
 
-            # Atualiza o estoque após a compra ser confirmada
+            # Atualiza o estoque subtraindo as quantidades compradas
             for prod, quantity in quantities_to_update.items():
-                product_stock[prod]["quantidade"] -= quantity  # Atualiza a quantidade do estoque
+                product_stock[prod]["quantidade"] -= quantity
 
-            # Exibe a notificação de compra finalizada
+            # Exibe a notificação de sucesso da compra
             ui.notification_show(f"Compra finalizada. Total: R${total:.2f}", duration=5)
 
-            # Reseta os inputs para a quantidade para 0
+            # Reseta os inputs para zero após a compra
             for prod in quantities_to_update.keys():
                 session.send_input_message(f"quant_{prod}", {"value": 0})
+
+            
+            
+
            
             
 
