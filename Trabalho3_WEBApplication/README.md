@@ -20,8 +20,6 @@ Este é um projeto de estudo para aplicar a biblioteca Shiny no desenvolvimento 
 4. Ative o ambiente virtual:
    ```bash
    .\venv\Scripts\activate
-   # ou
-   pip install -r requirements.txt
    ```
 5. Instale as dependencias:
    ```bash
